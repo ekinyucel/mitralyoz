@@ -8,7 +8,8 @@ import (
 
 const (
 	loadTestTime time.Duration = 30
-	workCount                  = 100
+	users                      = 30
+	rampPeriod                 = 5 // seconds
 )
 
 // Work represents a user action
@@ -27,9 +28,6 @@ func doWork(userID int, works <-chan Work, wg *sync.WaitGroup) {
 }
 
 func createUsers(works <-chan Work, wg *sync.WaitGroup) {
-	users := 10
-	rampPeriod := 5 // seconds
-
 	for i := 1; i <= users; i++ {
 		wg.Add(1)
 
@@ -40,11 +38,8 @@ func createUsers(works <-chan Work, wg *sync.WaitGroup) {
 	fmt.Println("all users are created")
 }
 
-func createWorkLoad(works chan<- Work, workCount int) {
-	for i := 1; i < workCount; i++ {
-		works <- Work{workID: i}
-	}
-	fmt.Println("all works are created")
+func createWork(works chan<- Work) {
+	works <- Work{workID: time.Now().Nanosecond()}
 }
 
 func main() {
@@ -52,8 +47,7 @@ func main() {
 
 	endTime := time.Now().Add(time.Second * loadTestTime)
 
-	works := make(chan Work, workCount)
-	go createWorkLoad(works, workCount)
+	works := make(chan Work)
 
 	for range time.Tick(1 * time.Second) {
 		if endTime.Before(time.Now()) {
@@ -62,7 +56,7 @@ func main() {
 			fmt.Println("the load test has finished")
 			break
 		}
-
+		go createWork(works)
 		go createUsers(works, &wg)
 	}
 }
