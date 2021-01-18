@@ -1,0 +1,5 @@
+loadtest:
+  users: 10
+  rampup: 2
+  totalTime: 30
+  iterations: 5

@@ -1,0 +1,35 @@
+package config
+
+import (
+	"os"
+
+	"gopkg.in/yaml.v2"
+)
+
+// TestConfig holds configuration values
+type TestConfig struct {
+	LoadTest struct {
+		Users      int `yaml:"users"`
+		Rampup     int `yaml:"rampup"`
+		TotalTime  int `yaml:"totalTime"`
+		Iterations int `yaml:"iterations"`
+	} `yaml:"loadtest"`
+}
+
+// ReadConfig function reads configuration values from yaml
+func ReadConfig() *TestConfig {
+	f, err := os.Open("resources/config.yml")
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+
+	testConfig := &TestConfig{}
+	decoder := yaml.NewDecoder(f)
+
+	if err := decoder.Decode(&testConfig); err != nil {
+		panic(err)
+	}
+
+	return testConfig
+}

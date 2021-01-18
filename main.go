@@ -5,23 +5,21 @@ import (
 	"sync"
 	"time"
 
+	"github.com/ekinyucel/mitralyoz/config"
 	"github.com/ekinyucel/mitralyoz/http"
 	"github.com/ekinyucel/mitralyoz/work"
 )
 
-const (
-	loadTestTime time.Duration = 30
-	users                      = 10 // The total amount of concurrent users
-	rampPeriod                 = 2  // Linear ramp-up period to create users
-)
+func createUsers(testConfig config.TestConfig, wg *sync.WaitGroup, results chan http.Result) {
+	users := testConfig.LoadTest.Users
+	rampUpTime := testConfig.LoadTest.Rampup
 
-func createUsers(wg *sync.WaitGroup, results chan http.Result) {
 	for i := 1; i <= users; i++ {
 		wg.Add(1)
 
-		go work.DoWork(i, wg, results)
+		go work.DoWork(testConfig, i, wg, results)
 
-		time.Sleep(time.Duration(int(1000*rampPeriod)) * time.Millisecond)
+		time.Sleep(time.Duration(int(1000*rampUpTime)) * time.Millisecond)
 	}
 	fmt.Println("all users are created")
 }
@@ -38,14 +36,16 @@ func gatherResults(results chan http.Result) {
 }
 
 func main() {
+	testConfig := config.ReadConfig()
+
 	wg := sync.WaitGroup{}
 
-	endTime := time.Now().Add(time.Second * loadTestTime)
+	endTime := time.Now().Add(time.Second * time.Duration(testConfig.LoadTest.TotalTime))
 
 	results := make(chan http.Result)
 
 	go gatherResults(results)
-	go createUsers(&wg, results)
+	go createUsers(*testConfig, &wg, results)
 
 	for range time.Tick(1 * time.Second) {
 		if endTime.Before(time.Now()) {

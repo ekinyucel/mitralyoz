@@ -4,12 +4,9 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/ekinyucel/mitralyoz/config"
 	"github.com/ekinyucel/mitralyoz/http"
 	"github.com/ekinyucel/mitralyoz/usecase"
-)
-
-const (
-	iterations = 5 // The iteration amount for each user to execute the actions
 )
 
 // Work represents a user action
@@ -19,9 +16,10 @@ type Work struct {
 }
 
 // DoWork is responsible for executing requests for each user
-func DoWork(userID int, wg *sync.WaitGroup, results chan http.Result) {
+func DoWork(testConfig config.TestConfig, userID int, wg *sync.WaitGroup, results chan http.Result) {
 	defer wg.Done()
 	useCases := usecase.InitializeUseCase()
+	iterations := testConfig.LoadTest.Iterations
 
 	for i := 0; i < iterations; i++ {
 		for _, usecase := range useCases {
