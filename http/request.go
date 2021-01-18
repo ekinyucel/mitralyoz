@@ -6,8 +6,16 @@ import (
 	"time"
 )
 
+// Result is holding the information about the executed HTTP result
+type Result struct {
+	ResultID    int
+	URL         string
+	ElapsedTime time.Duration
+	StatusCode  int
+}
+
 // SendHTTPRequest is used for sending a http request to given target
-func SendHTTPRequest(url string) {
+func SendHTTPRequest(url string, results chan Result) {
 	start := time.Now()
 	response, err := http.Get(url)
 
@@ -16,9 +24,7 @@ func SendHTTPRequest(url string) {
 		return
 	}
 
-	elapsedTime := time.Since(start)
+	httpResult := Result{URL: url, ElapsedTime: time.Since(start), StatusCode: response.StatusCode}
 
-	fmt.Printf("Successful call to: %v total elapsed time %v\n", url, elapsedTime)
-	fmt.Println()
-	fmt.Println("status code", response.StatusCode)
+	results <- httpResult
 }
