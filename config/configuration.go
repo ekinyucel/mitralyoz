@@ -16,8 +16,8 @@ type TestConfig struct {
 	} `yaml:"loadtest"`
 }
 
-// ReadConfig function reads configuration values from yaml
-func ReadConfig() *TestConfig {
+// ReadTestConfig function reads configuration values from yaml
+func ReadTestConfig() *TestConfig {
 	f, err := os.Open("resources/config.yml")
 	if err != nil {
 		panic(err)

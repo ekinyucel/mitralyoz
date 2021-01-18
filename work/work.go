@@ -9,12 +9,6 @@ import (
 	"github.com/ekinyucel/mitralyoz/usecase"
 )
 
-// Work represents a user action
-type Work struct {
-	workID  int
-	useCase usecase.UseCase
-}
-
 // DoWork is responsible for executing requests for each user
 func DoWork(testConfig config.TestConfig, userID int, wg *sync.WaitGroup, results chan http.Result) {
 	defer wg.Done()
@@ -22,12 +16,12 @@ func DoWork(testConfig config.TestConfig, userID int, wg *sync.WaitGroup, result
 	iterations := testConfig.LoadTest.Iterations
 
 	for i := 0; i < iterations; i++ {
-		for _, usecase := range useCases {
-			fmt.Printf("User %d is started %d work\n", userID, usecase.UseCaseID)
+		for _, usecase := range useCases.UseCase {
+			fmt.Printf("User %d is started %d work\n", userID, usecase.ID)
 
-			http.SendHTTPRequest(usecase.Url, results)
+			http.SendHTTPRequest(usecase.URL, results)
 
-			fmt.Printf("User %d is finished %d work\n", userID, usecase.UseCaseID)
+			fmt.Printf("User %d is finished %d work\n", userID, usecase.ID)
 		}
 	}
 }

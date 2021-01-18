@@ -36,7 +36,7 @@ func gatherResults(results chan http.Result) {
 }
 
 func main() {
-	testConfig := config.ReadConfig()
+	testConfig := config.ReadTestConfig()
 
 	wg := sync.WaitGroup{}
 
