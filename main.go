@@ -11,8 +11,9 @@ import (
 
 const (
 	loadTestTime time.Duration = 30
-	users                      = 30
-	rampPeriod                 = 5 // seconds
+	users                      = 10 // The total amount of concurrent users
+	rampPeriod                 = 2  // Linear ramp-up period to create users
+	iterations                 = 5  // The iteration amount for each user to execute the actions
 )
 
 // Work represents a user action
@@ -21,22 +22,26 @@ type Work struct {
 	useCase usecase.UseCase
 }
 
-func doWork(userID int, works <-chan Work, wg *sync.WaitGroup) {
+func doWork(userID int, wg *sync.WaitGroup) {
 	defer wg.Done()
-	for w := range works {
-		fmt.Printf("User %d is started %d work\n", userID, w.workID)
+	useCases := usecase.InitializeUseCase()
 
-		http.SendHTTPRequest(w.useCase.Url)
+	for i := 0; i < iterations; i++ {
+		for _, usecase := range useCases {
+			fmt.Printf("User %d is started %d work\n", userID, usecase.UseCaseID)
 
-		fmt.Printf("User %d is finished %d work\n", userID, w.workID)
+			http.SendHTTPRequest(usecase.Url)
+
+			fmt.Printf("User %d is finished %d work\n", userID, usecase.UseCaseID)
+		}
 	}
 }
 
-func createUsers(works <-chan Work, wg *sync.WaitGroup) {
+func createUsers(wg *sync.WaitGroup) {
 	for i := 1; i <= users; i++ {
 		wg.Add(1)
 
-		go doWork(i, works, wg)
+		go doWork(i, wg)
 
 		time.Sleep(time.Duration(int(1000*rampPeriod)) * time.Millisecond)
 	}
@@ -48,20 +53,13 @@ func main() {
 
 	endTime := time.Now().Add(time.Second * loadTestTime)
 
-	works := make(chan Work)
-
-	go createUsers(works, &wg)
+	go createUsers(&wg)
 
 	for range time.Tick(1 * time.Second) {
 		if endTime.Before(time.Now()) {
-			close(works)
 			wg.Wait()
 			fmt.Println("the load test has finished")
 			break
 		}
-		go func(works chan<- Work) {
-			useCases := usecase.InitializeUseCase()
-			works <- Work{workID: time.Now().Nanosecond(), useCase: useCases[0]}
-		}(works)
 	}
 }
