@@ -6,6 +6,7 @@ Currently, supporting basic get requests to given targets.
 
 # ToDo
 
+-   Calculate the results (average, total response time), (total hit counts)
 -   Creating a session for each test case run.
 -   Basic UI to start and stop each test run
 -   Basic UI to show results.

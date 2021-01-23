@@ -10,6 +10,7 @@ import (
 type TestConfig struct {
 	LoadTest struct {
 		Users      int `yaml:"users"`
+		Cooldown   int `yaml:"cooldown"`
 		Rampup     int `yaml:"rampup"`
 		TotalTime  int `yaml:"totalTime"`
 		Iterations int `yaml:"iterations"`

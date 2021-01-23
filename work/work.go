@@ -3,6 +3,7 @@ package work
 import (
 	"log"
 	"sync"
+	"time"
 
 	"github.com/ekinyucel/mitralyoz/config"
 	"github.com/ekinyucel/mitralyoz/http"
@@ -22,6 +23,8 @@ func DoWork(testConfig config.TestConfig, userID int, wg *sync.WaitGroup, result
 			http.SendHTTPRequest(usecase.URL, results)
 
 			log.Printf("User %d is finished %d work\n", userID, usecase.ID)
+
+			time.Sleep(time.Duration(int(1000*testConfig.LoadTest.Cooldown)) * time.Millisecond)
 		}
 	}
 }

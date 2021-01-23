@@ -1,5 +1,6 @@
 loadtest:
   users: 10
-  rampup: 2
-  totalTime: 30
-  iterations: 5
+  cooldown: 5 # indicates the cooldown period for a user to send a new request
+  rampup: 2 # indicates the ramp-up period for creating new users.
+  totalTime: 60 # indicates the total time of the load test run
+  iterations: 5 # total iteration count of use cases for each user.
