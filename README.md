@@ -7,6 +7,7 @@ Currently, supporting basic get requests to given targets.
 # ToDo
 
 -   Creating a session for each test case run.
+-   Basic UI to start and stop each test run
 -   Basic UI to show results.
 -   Supporting POST,PUT and DELETE operations.
 -   Basic authentication and token retrieval.
