@@ -1,7 +1,7 @@
 package result
 
 import (
-	"fmt"
+	"log"
 	"time"
 
 	"github.com/ekinyucel/mitralyoz/http"
@@ -13,7 +13,7 @@ func GatherResults(results chan http.Result) {
 	for {
 		select {
 		case result := <-results:
-			fmt.Printf("url %v statuscode %v total elapsed time %v\n", result.URL, result.StatusCode, result.ElapsedTime)
+			log.Printf("url %v statuscode %v total elapsed time %v\n", result.URL, result.StatusCode, result.ElapsedTime)
 		default:
 			time.Sleep(100 * time.Millisecond)
 		}

@@ -1,7 +1,7 @@
 package http
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 	"time"
 )
@@ -20,7 +20,7 @@ func SendHTTPRequest(url string, results chan Result) {
 	response, err := http.Get(url)
 
 	if err != nil {
-		fmt.Printf("Error calling: %v\n", url)
+		log.Printf("Error calling: %v\n", url)
 		return
 	}
 

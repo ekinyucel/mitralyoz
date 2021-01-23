@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"sync"
 	"time"
 
@@ -26,7 +26,7 @@ func main() {
 	for range time.Tick(1 * time.Second) {
 		if endTime.Before(time.Now()) {
 			wg.Wait()
-			fmt.Println("the load test has finished")
+			log.Println("the load test has finished")
 			break
 		}
 	}

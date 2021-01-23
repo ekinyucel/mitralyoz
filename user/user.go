@@ -1,7 +1,7 @@
 package user
 
 import (
-	"fmt"
+	"log"
 	"sync"
 	"time"
 
@@ -23,5 +23,5 @@ func CreateUsers(testConfig config.TestConfig, wg *sync.WaitGroup, results chan 
 
 		time.Sleep(time.Duration(int(1000*rampUpTime)) * time.Millisecond)
 	}
-	fmt.Println("all users are created")
+	log.Println("all users are created")
 }

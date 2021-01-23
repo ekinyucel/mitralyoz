@@ -1,7 +1,7 @@
 package work
 
 import (
-	"fmt"
+	"log"
 	"sync"
 
 	"github.com/ekinyucel/mitralyoz/config"
@@ -17,11 +17,11 @@ func DoWork(testConfig config.TestConfig, userID int, wg *sync.WaitGroup, result
 
 	for i := 0; i < iterations; i++ {
 		for _, usecase := range useCases.UseCase {
-			fmt.Printf("User %d is started %d work\n", userID, usecase.ID)
+			log.Printf("User %d is started %d work\n", userID, usecase.ID)
 
 			http.SendHTTPRequest(usecase.URL, results)
 
-			fmt.Printf("User %d is finished %d work\n", userID, usecase.ID)
+			log.Printf("User %d is finished %d work\n", userID, usecase.ID)
 		}
 	}
 }
