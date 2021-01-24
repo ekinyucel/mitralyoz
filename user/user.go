@@ -17,8 +17,6 @@ func CreateUsers(testConfig config.TestConfig, wg *sync.WaitGroup, results chan 
 	rampUpTime := testConfig.LoadTest.Rampup
 
 	for i := 1; i <= users; i++ {
-		wg.Add(1)
-
 		go work.DoWork(testConfig, i, wg, results)
 
 		time.Sleep(time.Duration(int(1000*rampUpTime)) * time.Millisecond)
