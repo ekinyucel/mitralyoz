@@ -15,3 +15,4 @@ Currently, supporting basic get requests to given targets.
 -   Customized usecase definition. Setting dynamic url parameters. Creating request body.
 -   Support stress test, failover test and slow backend tests.
 -   Generate log file to keep results
+-   Write test cases to cover the code

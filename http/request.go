@@ -12,10 +12,11 @@ type Result struct {
 	URL         string
 	ElapsedTime time.Duration
 	StatusCode  int
+	UseCaseID   int
 }
 
 // SendHTTPRequest is used for sending a http request to given target
-func SendHTTPRequest(url string, results chan Result) {
+func SendHTTPRequest(useCaseID int, url string, results chan Result) {
 	start := time.Now()
 	response, err := http.Get(url)
 
@@ -24,7 +25,7 @@ func SendHTTPRequest(url string, results chan Result) {
 		return
 	}
 
-	httpResult := Result{URL: url, ElapsedTime: time.Since(start), StatusCode: response.StatusCode}
+	httpResult := Result{UseCaseID: useCaseID, URL: url, ElapsedTime: time.Since(start), StatusCode: response.StatusCode}
 
 	results <- httpResult
 }

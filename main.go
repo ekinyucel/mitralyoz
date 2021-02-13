@@ -28,7 +28,7 @@ func main() {
 	for range time.Tick(1 * time.Second) {
 		if endTime.Before(time.Now()) {
 			wg.Wait()
-			log.Printf("total request count %v", result.GetTotalRequestCount())
+			result.GetTotalRequestCount()
 			log.Println("the load test has finished")
 			break
 		}

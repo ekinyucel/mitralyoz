@@ -18,11 +18,12 @@ func DoWork(testConfig config.TestConfig, userID int, wg *sync.WaitGroup, result
 
 	for i := 0; i < iterations; i++ {
 		for _, usecase := range useCases.UseCase {
-			log.Printf("User %d is started, use case %d\n", userID, usecase.ID)
+			useCaseID := usecase.ID
+			log.Printf("User %d is started, use case %d\n", userID, useCaseID)
 
-			http.SendHTTPRequest(usecase.URL, results)
+			http.SendHTTPRequest(useCaseID, usecase.URL, results)
 
-			log.Printf("User %d is finished, use case %d\n", userID, usecase.ID)
+			log.Printf("User %d is finished, use case %d\n", userID, useCaseID)
 
 			time.Sleep(time.Duration(int(1000*testConfig.LoadTest.Cooldown)) * time.Millisecond)
 		}
